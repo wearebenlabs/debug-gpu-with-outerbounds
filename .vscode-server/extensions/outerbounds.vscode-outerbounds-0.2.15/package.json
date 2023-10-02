@@ -1,0 +1,235 @@
+{
+  "name": "vscode-outerbounds",
+  "displayName": "Outerbounds",
+  "publisher": "outerbounds",
+  "description": "Access workstations on the Outerbounds platform.",
+  "version": "0.2.15",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/outerbounds/vscode-outerbounds"
+  },
+  "categories": [
+    "Data Science",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "outerbounds",
+    "metaflow",
+    "datascience"
+  ],
+  "icon": "public/media/icon.png",
+  "preview": true,
+  "engines": {
+    "vscode": "^1.70.0",
+    "outerbounds": "v0.3.35rc"
+  },
+  "extensionDependencies": [],
+  "extensionKind": [
+    "workspace"
+  ],
+  "scripts": {
+    "shiv": "shiv -c outerbounds -o ./bin/outerbounds-darwin-arm64 outerbounds==0.3.35rc0",
+    "lint": "eslint src --ext ts",
+    "test": "",
+    "prebuild": "npm run lint",
+    "build": "esbuild ./src/index.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node --target=es2020",
+    "dev": "npm run build -- --sourcemap --watch",
+    "bump": "vsce package -o . --no-git-tag-version",
+    "vscode:prepublish": "npm run build -- --minify",
+    "deploy": "vsce publish --no-git-tag-version --no-update-package-json",
+    "preview": "npm run deploy -- --pre-release"
+  },
+  "activationEvents": [
+    "onView:outerboundsViewContainer",
+    "onStartupFinished"
+  ],
+  "main": "./out/main.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "obp.configureWorkstations",
+        "title": "Configure Workstations",
+        "icon": "$(gear)",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.openMetaflowConfig",
+        "title": "Open Metaflow Config",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.workstationListRefresh",
+        "title": "Refresh",
+        "icon": "$(refresh)",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.workstationConnect",
+        "title": "Connect",
+        "icon": "$(vm-connect)",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.workstationHibernate",
+        "title": "Hibernate",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.workstationStart",
+        "title": "Start",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.workstationConnectFromQuickPick",
+        "title": "Connect to Workstation",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.outerboundsCheck",
+        "title": "Check",
+        "category": "Outerbounds"
+      },
+      {
+        "command": "obp.toggleDebug",
+        "title": "Toggle Debug",
+        "category": "Outerbounds"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "obp.workstationHibernate",
+          "when": "false"
+        },
+        {
+          "command": "obp.workstationStart",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "obp.workstationListRefresh",
+          "when": "view == obp.obWorkStationListView",
+          "group": "navigation"
+        },
+        {
+          "command": "obp.configureWorkstations",
+          "when": "view == obp.obWorkStationListView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "obp.workstationConnect",
+          "when": "view == obp.obWorkStationListView",
+          "group": "workstationListContext"
+        },
+        {
+          "command": "obp.workstationHibernate",
+          "when": "view == obp.obWorkStationListView && config.outerbounds.debug",
+          "group": "workstationListContext"
+        },
+        {
+          "command": "obp.workstationStart",
+          "when": "view == obp.obWorkStationListView && config.outerbounds.debug",
+          "group": "workstationListContext"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "obp.obWorkStationListView",
+        "contents": "No workstations loaded."
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "outerboundsViewContainer",
+          "title": "Outerbounds",
+          "icon": "public/resources/dark/activity-icon.svg",
+          "when": "!obp.isRemote"
+        }
+      ]
+    },
+    "views": {
+      "outerboundsViewContainer": [
+        {
+          "id": "obp.helpView",
+          "name": "Welcome!",
+          "type": "webview",
+          "when": "!obp.isRemote"
+        },
+        {
+          "id": "obp.obWorkStationListView",
+          "name": "Outerbounds Workstations",
+          "type": "tree",
+          "when": "!obp.isRemote"
+        },
+        {
+          "id": "obp.obWorkStationInfoView",
+          "name": "Workstation Info",
+          "type": "webview",
+          "when": "!obp.isRemote"
+        },
+        {
+          "id": "obp.debugView",
+          "name": "Outerbounds Debug",
+          "type": "webview",
+          "when": "config.outerbounds.debug && !obp.isRemote"
+        },
+        {
+          "id": "obp.welcomeView",
+          "name": "Welcome!",
+          "visibility": "visible",
+          "type": "webview",
+          "when": "obp.isRemote"
+        },
+        {
+          "id": "obp.linksView",
+          "name": "Links",
+          "visibility": "visible",
+          "type": "tree",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Outerbounds",
+      "properties": {
+        "outerbounds.debug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable debug mode",
+          "order": 100
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/command-exists": "^1.2.1",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/mustache": "^4.2.2",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.70",
+    "@types/vscode-webview": "^1.57.2",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "@vscode/test-electron": "^2.3.4",
+    "@vscode/vsce": "^2.21.0",
+    "command-exists": "^1.2.9",
+    "esbuild": "^0.19.3",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "glob": "^10.3.4",
+    "typescript": "^5.2.2",
+    "zod": "^3.22.2",
+    "zod-validation-error": "^1.5.0"
+  },
+  "dependencies": {
+    "@vscode/extension-telemetry": "^0.8.4",
+    "mustache": "^4.2.0"
+  }
+}

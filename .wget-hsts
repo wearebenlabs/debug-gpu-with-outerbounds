@@ -1,0 +1,6 @@
+# HSTS 1.0 Known Hosts database for GNU Wget.
+# Edit at your own risk.
+# <hostname>	<port>	<incl. subdomains>	<created>	<max-age>
+raw.githubusercontent.com	0	0	1695209839	31536000
+www.python.org	0	1	1695209739	63072000
+github.com	0	1	1695333005	31536000

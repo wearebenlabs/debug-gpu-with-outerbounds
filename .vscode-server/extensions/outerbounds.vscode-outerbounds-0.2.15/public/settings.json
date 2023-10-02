@@ -1,0 +1,30 @@
+{
+    "window.title": "${dirty}${activeEditorShort}${separator}${rootNameShort}${separator}Outerbounds",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#faf7f4",
+        "titleBar.inactiveBackground": "#faf7f4",
+        "titleBar.activeForeground": "#555555"
+    },
+    "window.titleBarStyle": "custom",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        ".cache": true,
+        ".ssh": true,
+        ".profile": true,
+        ".wget-hsts": true,
+        ".gitconfig": true,
+        ".backups": true,
+        ".bashrc": true,
+        ".bash_history": true,
+        ".vscode-server": true,
+        ".mambaforge": true,
+        ".conda": true,
+        ".init_marker": true,
+        ".ob": true
+    }
+}
